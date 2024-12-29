@@ -1,14 +1,24 @@
 const mongoose = require("mongoose");
-const expores = require("express");
-const app = expores();
+const express = require("express");;
+const cors=require('cors');
+const app = express();
 const port = 3000;
+const categoryRoutes = require("./routes/category");
+const brandRoutes = require("./routes/brand");
+const productRoutes = require("./routes/product");
 
+app.use(express.json());
+app.use(cors())
 app.get("/",(req,res)=>{
     res.send("server running");
 });
 
+app.use("/category",categoryRoutes);
+app.use("/brand",brandRoutes);
+app.use("/product",productRoutes);
+
 async function connectDb(){
-    await mongoose.connect("localhost:27017",{
+    await mongoose.connect("mongodb://0.0.0.0:27017",{
         dbName:"e-com-store-db",
     });
     console.log("mongodb connected")
