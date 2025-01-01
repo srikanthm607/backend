@@ -33,4 +33,18 @@ async function getProduct(id){
     return product.toObject();
 }
 
-module.exports = {getProduct,getAllProducts,updateProduct,addProduct,deleteProduct}
+async function getNewProducts(){
+    let newProducts = await Product.find({
+        isNewProduct:true,
+    });
+    return newProducts.map((x)=> x.toObject());
+}
+
+async function getFeaturedProducts(){
+    let featuredProducts = await Product.find({
+        isFeatured:true,
+    });
+    return featuredProducts.map((x)=> x.toObject());
+}
+
+module.exports = {getProduct,getAllProducts,updateProduct,addProduct,deleteProduct,getNewProducts,getFeaturedProducts}
