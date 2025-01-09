@@ -47,4 +47,35 @@ async function getFeaturedProducts(){
     return featuredProducts.map((x)=> x.toObject());
 }
 
-module.exports = {getProduct,getAllProducts,updateProduct,addProduct,deleteProduct,getNewProducts,getFeaturedProducts}
+async function getProductForListing(searchTerm,
+    categoryId,
+    page,
+    pageSize,
+    sortBy,
+    sortOrder,
+    brandId){
+    if(!sortBy){
+        sortBy='price'
+    }
+    if(!sortOrder){
+        sortOrder=-1
+    }
+    let queryFilter = {};
+    if(searchTerm){
+        queryFilter.name = {$regex:'.*' +searchTerm+'*.'};
+    }
+    if(categoryId){
+        queryFilter.categoryId = categoryId;
+    }
+    if(brandId){
+        queryFilter.brandId = brandId;
+    }
+    console.log(queryFilter)
+    const products = await Product.find(queryFilter)
+    .sort( { [sortBy]:Number(sortOrder) } )
+    .skip((page-1)*pageSize)
+    .limit(pageSize);
+    return products.map((x)=>x.toObject())
+}
+
+module.exports = {getProduct,getAllProducts,updateProduct,addProduct,deleteProduct,getNewProducts,getFeaturedProducts, getProductForListing}
